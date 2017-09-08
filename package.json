@@ -34,5 +34,11 @@
   "devDependencies": {
     "browserify": "^14.4.0",
     "es2040": "^1.2.6"
-  }
+  },
+  "browserify": {
+     "transform": [
+       "require-globify",
+       "enoki/transform"
+     ]
+   }
 }
