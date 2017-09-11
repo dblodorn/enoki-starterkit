@@ -5,6 +5,7 @@ function events (state, emitter) {
 
   state.events.PANEL_UPDATE = 'panel:update'
   state.events.PANEL_MOVE = 'panel:move'
+  state.events.PANEL_PUBLISH = 'panel:publish'
   
   state.events.PANEL_PAGE_ADD = 'panel:page:add'
   state.events.PANEL_FILES_ADD = 'panel:files:add'

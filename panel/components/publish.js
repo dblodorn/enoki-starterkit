@@ -13,7 +13,7 @@ class Publish extends Nanocomponent {
   createElement (props) {
     return html`
       <div>
-        Publish
+        Publishing…
       </div>
     `
   }

@@ -28,7 +28,7 @@ function PageNewView (state, emit) {
     content: content,
     className: 'c6',
     handleContainerClick: function (event) {
-      emit(state.events.REPLACESTATE, '?panel=active')
+      emit(state.events.REPLACESTATE, '?')
     }
   })
 
@@ -44,7 +44,7 @@ function PageNewView (state, emit) {
           pathPage: path.join(state.page.path, data.value.uri)
         })
         break
-      case 'cancel': return emit(state.events.REPLACESTATE, '?panel=active')
+      case 'cancel': return emit(state.events.REPLACESTATE, '?')
     }
   }
 

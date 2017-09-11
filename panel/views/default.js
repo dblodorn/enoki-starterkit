@@ -9,7 +9,6 @@ var ActionBar = require('../components/actionbar')
 var Breadcrumbs = require('../components/breadcrumbs')
 var Sidebar = require('../components/sidebar')
 var Split = require('../components/split')
-var Publish = require('../components/publish')
 
 // containers
 var Fields = require('../containers/fields')
@@ -20,6 +19,7 @@ var FilesAll = require('./files-all')
 var FileNew = require('./file-new')
 var PagesAll = require('./pages-all')
 var PageNew = require('./page-new')
+var Publish = require('./publish')
 
 // methods
 var methodsFile = require('../methods/file')
@@ -48,6 +48,9 @@ function View (state, emit) {
           <a href="/" class="db p1 nbb">index</a>
           ${Breadcrumbs({ page: state.page })}
         </div>
+        <div class="p1 tcwhite tdn curp" onclick=${handlePublish}>
+          Publish
+        </div>
       </div>
     `
   }
@@ -75,22 +78,31 @@ function View (state, emit) {
 
   // TODO: clean this up
   function content () {
+    // files
     if (search.file === 'new') {
       return Split(sidebar(), [FileNew(state, emit), Page()])
+    } else if (search.file) {
+      return File(state, emit)
     }
 
-    if (search.file) return File(state, emit)
-    if (search.pages === 'all') return PagesAll(state, emit)
+    // file
+    if (search.files === 'all') {
+      return FilesAll(state, emit)
+    }
 
-    if (search.page === 'new') {
+    // pages
+    if (search.pages === 'all') {
+      return PagesAll(state, emit)
+    } else if (search.page === 'new') {
       return Split(
         sidebar(),
         [PageNew(state, emit), Page()]
       )
     }
 
-    if (search.files === 'all') {
-      return FilesAll(state, emit)
+    // publish
+    if (state.panel.publish.active) {
+      return Split(sidebar(), [Publish(state, emit), Page()])
     }
 
     return Split(
@@ -172,6 +184,10 @@ function View (state, emit) {
       pathPage: state.page.path,
       files: data.files
     })
+  }
+
+  function handlePublish (event) {
+    emit(state.events.PANEL_PUBLISH)
   }
 
   function getBlueprint () {

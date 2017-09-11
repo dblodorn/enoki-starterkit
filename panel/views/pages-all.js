@@ -40,7 +40,7 @@ function elsChildren (props) {
     return html`
       <li id="${child.url}" class="m0">
         <a
-          href="${child.url}?panel=active"
+          href="${child.url}"
           class="db py0-5 truncate"
         >${child.title || child.dirname}</a>
       </li>

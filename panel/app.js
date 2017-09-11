@@ -4,14 +4,10 @@ var xtend = require('xtend')
 var path = require('path')
 var fs = require('fs')
 
-var site = enoki({
-  directory: path.join(__dirname, '../')
-})
-
 module.exports = setup
 
 // wrapp choo app
-function setup (app) {
+function setup (app, site) {
   var views = getViews()
 
   app.use(exposeState)
@@ -40,7 +36,7 @@ function setup (app) {
       // if there are children, create them
       if (typeof page.children === 'object') {
         objectValues(page.children).forEach(function (child) {
-          if (child.children) route(child)
+          if (child.children) return route(child)
         })
       }
     }

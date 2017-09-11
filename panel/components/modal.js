@@ -19,7 +19,7 @@ Modal.prototype.createElement = function (props) {
   return html`
     <div
       id="modal"
-      class="p1 psf t0 l0 r0 b0 x xjc xac z3 curp"
+      class="p1 psf t0 l0 r0 b0 x xjc xac z4"
       style="background: rgba(127, 127, 127, 0.5)"
       onclick=${this.handleContainerClick}
     >
