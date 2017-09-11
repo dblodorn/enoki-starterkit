@@ -4,9 +4,7 @@ var enoki = require('enoki')
 var path = require('path')
 var fs = require('fs')
 
-var site = enoki({
-  directory: path.join(__dirname, '../')
-})
+var site = enoki.state()
 
 module.exports = setup
 
@@ -57,7 +55,7 @@ function setup (app) {
     return module.parent ? getNode() : getBrowserify()
 
     function getNode () {
-      var pathViews = path.join(__dirname, './views')
+      var pathViews = path.join(__dirname, './site/views')
       return fs.readdirSync(pathViews).reduce(function (result, file) {
         file = path.basename(file, path.extname(file))
         result[file] = require(path.join(pathViews, file))
@@ -66,7 +64,7 @@ function setup (app) {
     }
 
     function getBrowserify () {
-      var viewSrc = require('./views/*.js', { mode: 'hash' })
+      var viewSrc = require('./site/views/*.js', { mode: 'hash' })
       return Object.keys(viewSrc).reduce(function (result, value) {
         result[path.basename(value)] = viewSrc[value]
         return result

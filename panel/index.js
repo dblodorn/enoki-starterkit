@@ -11,6 +11,7 @@ app.use(function (state, emitter) {
     json: true
   }, function (err, resp, body) {
     if (err) alert(err.message)
+      console.log(body)
     config(app, body)
     app.mount('main')
   })

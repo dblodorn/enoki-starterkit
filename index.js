@@ -5,10 +5,10 @@ var config = require('./app')
 var app = config(choo())
 
 // create your app
-app.use(require('./plugins/scroll'))
+app.use(require('./site/plugins/scroll'))
 
 // error route
-app.route('*', require('./views/notfound'))
+app.route('*', require('./site/views/notfound'))
 
 // public
 if (module.parent) {
