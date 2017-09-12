@@ -1,6 +1,7 @@
 var queryString = require('query-string')
 var objectKeys = require('object-keys')
 var assert = require('nanoassert')
+var utils = require('enoki/utils')
 var html = require('choo/html')
 var xtend = require('xtend')
 var path = require('path')
@@ -9,12 +10,15 @@ var xhr = require('xhr')
 module.exports = panel
 
 function panel (state, emitter) {
+  state.content = { }
+  state.site = { }
   state.panel = {
     changes: { },
     loading: false,
     publish: { }
   }
-  
+
+  emitter.on(state.events.DOMCONTENTLOADED, onLoad)
   emitter.on(state.events.PANEL_UPDATE, onUpdate)
   emitter.on(state.events.PANEL_SAVE, onSave)
   emitter.on(state.events.PANEL_CANCEL, onCancel)
@@ -23,6 +27,18 @@ function panel (state, emitter) {
   emitter.on(state.events.PANEL_PAGE_ADD, onPageAdd)
   emitter.on(state.events.PANEL_FILES_ADD, onFilesAdd)
   emitter.on(state.events.PANEL_PUBLISH, onPublish)
+
+  function onLoad () {
+    xhr.get({
+      uri: '/api/v1/state',
+      json: true
+    }, function (err, resp, body) {
+      if (err) alert(err.message)
+      state.content = body.content
+      state.site = body.site
+      emitter.emit(state.events.RENDER)
+    })
+  }
 
   function onUpdate (data) {
     assert.equal(typeof data, 'object', 'enoki: data must be type object')
@@ -46,11 +62,14 @@ function panel (state, emitter) {
       body: data,
       json: true
     }, function (err, resp, body) {
-      emitter.emit(state.events.PANEL_LOADING, { loading: false })
-      emitter.emit(state.events.RENDER)
-      if (err) alert(err.message)
+      if (err) return alert(err.message)
       delete state.panel.changes[data.pathPage]
-      emitter.emit(state.events.RENDER)
+      if (data.render) {
+        emitter.emit(state.events.PANEL_LOADING, { loading: false })
+        emitter.emit(state.events.RENDER)
+      } else {
+        onRefresh({ path: data.pathPage })
+      }
     })
   }
 
@@ -84,9 +103,14 @@ function panel (state, emitter) {
       body: data,
       json: true
     }, function (err, resp, body) {
-      emitter.emit(state.events.PANEL_LOADING, { loading: false })
-      emitter.emit(state.events.RENDER)
       if (err) return alert(err.message)
+      if (data.render) {
+        emitter.emit(state.events.PANEL_LOADING, { loading: false })
+        emitter.emit(state.events.RENDER)
+      } else {
+        onRefresh({ path: data.pathPage })
+      }
+
       emitter.emit(state.events.REPLACESTATE, data.pathPage)
     })  
   }
@@ -109,11 +133,15 @@ function panel (state, emitter) {
       body: data,
       json: true
     }, function (err, resp, body) {
-      emitter.emit(state.events.PANEL_LOADING, { loading: false })
-      emitter.emit(state.events.RENDER)
       if (err) return alert(err.message)
-      if (data.redirect !== false) {
-        emitter.emit(state.events.REPLACESTATE, path.join(data.pathPage, '../'))
+      if (data.render) {
+        emitter.emit(state.events.PANEL_LOADING, { loading: false })
+        emitter.emit(state.events.RENDER)
+      } else {
+        onRefresh({
+          path: data.pathPage,
+          redirect:  path.join(data.pathPage, '../')
+        })
       }
     })  
   }
@@ -143,9 +171,13 @@ function panel (state, emitter) {
 
     // callback
     send.addEventListener('load', function (event) {
-      emitter.emit(state.events.PANEL_LOADING, { loading: false })
-      emitter.emit(state.events.RENDER)
       if (this.status !== 200) return alert('Can not upload')
+      if (data.render) {
+        emitter.emit(state.events.PANEL_LOADING, { loading: false })
+        emitter.emit(state.events.RENDER)
+      } else {
+        onRefresh({ path: data.pathPage })
+      }
       // emitter.emit(state.events.REPLACESTATE, '?panel=active')
     })
   }
@@ -167,16 +199,41 @@ function panel (state, emitter) {
       body: { },
       json: true
     }, function (err, resp, body) {
-      emitter.emit(state.events.PANEL_LOADING, { loading: false })
-      emitter.emit(state.events.RENDER)
       if (err) return alert(err.message)
       state.panel.publish.active = false
-      emitter.emit(state.events.RENDER)
+
+      if (data.render) {
+        emitter.emit(state.events.PANEL_LOADING, { loading: false })
+        emitter.emit(state.events.RENDER)
+      } else {
+        onRefresh({ path: data.pathPage })
+      }
     })  
+  }
+
+  // TODO: replace only the updated page, not whole site
+  function onRefresh (data) {
+    assert.equal(typeof data, 'object', 'enoki: data must be type object')
+    assert.equal(typeof data.path, 'string', 'enoki: data.path must be type string')
+
+    xhr.get({
+      uri: '/api/v1/state',
+      json: true
+    }, function (err, resp, body) {
+      if (err) return alert(err.message)
+      state.content = body.content
+      emitter.emit(state.events.PANEL_LOADING, { loading: false })
+      emitter.emit(state.events.RENDER)
+
+      if (typeof data.redirect === 'string') {
+        emitter.emit(state.events.REPLACESTATE, data.redirect)
+      }
+    })  
+  }
+
+  function checkForChanges (changes) {
+    var changes = (changes) ? objectKeys(changes) : [ ]
+    return (changes.length > 0) ? changes.length : false
   }
 }
 
-function checkForChanges (changes) {
-  var changes = (changes) ? objectKeys(changes) : [ ]
-  return (changes.length > 0) ? changes.length : false
-}

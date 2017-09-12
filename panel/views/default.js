@@ -1,4 +1,5 @@
 var queryString = require('query-string')
+var utils = require('enoki/utils')
 var html = require('choo/html')
 var ok = require('object-keys')
 var xtend = require('xtend')
@@ -29,6 +30,9 @@ var methodsSite = require('../methods/site')
 module.exports = View
 
 function View (state, emit) {
+  // TODO: currently overwrite page
+  state.page = utils.page().find(state.href, state.content)
+
   var search = queryString.parse(location.search)
   var draftPage = getDraftPage()
   var blueprint = getBlueprint()
@@ -191,13 +195,13 @@ function View (state, emit) {
   }
 
   function getBlueprint () {
-    if (!state.page) {
-      return { }
-    } else {
+    if (state.page && state.site && state.site.blueprints) {
       return (
         state.site.blueprints[state.page.view] ||
         state.site.blueprints.default
       )
+    } else {
+      return { }
     }
   }
 
