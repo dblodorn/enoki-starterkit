@@ -178,7 +178,6 @@ function panel (state, emitter) {
       } else {
         onRefresh({ path: data.pathPage })
       }
-      // emitter.emit(state.events.REPLACESTATE, '?panel=active')
     })
   }
 

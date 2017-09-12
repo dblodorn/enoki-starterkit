@@ -15,6 +15,7 @@ module.exports = File
 function File (state, emit) {
   var search = queryString.parse(location.search)
   var filename = methodsFile.decodeFilename(search.file)
+  if (!state.page.files) return notFound()
   var file = state.page.files[filename]
   if (!file) return notFound()
   var blueprint = getBlueprint()

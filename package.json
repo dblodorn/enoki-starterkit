@@ -6,7 +6,7 @@
   "scripts": {
     "api": "",
     "serve": "cd public && python -m SimpleHTTPServer 8080",
-    "build": "enoki build -o public/ && browserify index.js -o public/bundle.js -t require-globify -t enoki/transform -t yo-yoify -t es2040",
+    "build": "enoki build -o public/ && browserify index.js -o public/bundle.js -t require-globify -t enoki -t yo-yoify -t es2040",
     "start": "enoki dev",
     "panel": "enoki panel",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -34,5 +34,11 @@
   "devDependencies": {
     "browserify": "^14.4.0",
     "es2040": "^1.2.6"
+  },
+  "enoki": {
+    "paths": {
+      "content": "content",
+      "public": "build"
+    }
   }
 }

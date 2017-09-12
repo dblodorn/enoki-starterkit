@@ -8,7 +8,6 @@ var modal = Modal()
 module.exports = Container
 
 function Container (state, emit) {
-  console.log('hi')
   return modal.render({
     content: content(),
     className: 'c6'

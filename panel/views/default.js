@@ -82,6 +82,11 @@ function View (state, emit) {
 
   // TODO: clean this up
   function content () {
+    // publish
+    if (state.panel.publish.active) {
+      return Split(sidebar(), [Publish(state, emit), Page()])
+    }
+
     // files
     if (search.file === 'new') {
       return Split(sidebar(), [FileNew(state, emit), Page()])
@@ -102,11 +107,6 @@ function View (state, emit) {
         sidebar(),
         [PageNew(state, emit), Page()]
       )
-    }
-
-    // publish
-    if (state.panel.publish.active) {
-      return Split(sidebar(), [Publish(state, emit), Page()])
     }
 
     return Split(
