@@ -24,7 +24,7 @@ class Tags extends Nanocomponent {
           name="${state.key}"
           class="c12"
           type="tags"
-          value="${state.value || ''}"
+          value="${this.value}"
           onchange=${onChange}
         />
       </div>
@@ -41,7 +41,7 @@ class Tags extends Nanocomponent {
     if (state.value !== this.value) {
       var el = this.element.querySelector('.tags-input')
       this.value = state.value
-      this.element.querySelector('input').value = state.value
+      this.element.querySelector('input').value = state.value || [ ]
 
       // reset
       if (this.value === this.valueStart) {
