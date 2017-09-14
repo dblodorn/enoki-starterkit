@@ -12,7 +12,9 @@ module.exports = panel
 function panel (state, emitter) {
   state.content = { }
   state.site = { }
+
   state.panel = {
+    session: { },
     changes: { },
     loading: false,
     publish: { }
@@ -53,6 +55,9 @@ function panel (state, emitter) {
     assert.equal(typeof data.file, 'string', 'enoki: data.file must be type string')
     assert.equal(typeof data.pathPage, 'string', 'enoki: data.pathPage must be type string')
     assert.equal(typeof data.page, 'object', 'enoki: data.page must be type object')
+
+    var session = state.panel.session[data.pathPage]
+    if (!session) data.refresh = true
 
     emitter.emit(state.events.PANEL_LOADING, { loading: true })
     emitter.emit(state.events.RENDER)
@@ -95,6 +100,10 @@ function panel (state, emitter) {
     assert.equal(typeof data.title, 'string', 'enoki: data.title must be type string')
     assert.equal(typeof data.view, 'string', 'enoki: data.view must be type string')
 
+    var session = state.panel.session[data.pathPage]
+    if (!session) data.refresh = true
+    if (!session) state.panel.session[data.pathPage] = true
+
     emitter.emit(state.events.PANEL_LOADING, { loading: true })
     emitter.emit(state.events.RENDER)
 
@@ -125,6 +134,9 @@ function panel (state, emitter) {
         return
       }
     }
+
+    var session = state.panel.session[data.pathPage]
+    if (session) data.refresh = true
 
     emitter.emit(state.events.PANEL_LOADING, { loading: true })
     emitter.emit(state.events.RENDER)
@@ -162,6 +174,9 @@ function panel (state, emitter) {
     // add the files to the request
     objectKeys(data.files).forEach(function (key) {
       var file = data.files[key]
+      var pathFile = path.join(data.pathPage, file.name)
+      var session = state.panel.session[pathFile]
+      if (!session) state.panel.session[pathFile] = true
       formData.append(file.name, file)
     })
 
@@ -220,7 +235,6 @@ function panel (state, emitter) {
       state.content = body.content
       emitter.emit(state.events.PANEL_LOADING, { loading: false })
       emitter.emit(state.events.RENDER)
-
       if (typeof data.redirect === 'string') {
         emitter.emit(state.events.REPLACESTATE, data.redirect)
       }

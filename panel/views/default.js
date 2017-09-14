@@ -117,7 +117,7 @@ function View (state, emit) {
 
   function Page () {
     return html`
-      <div id="content-page" class="x xdc c12">
+      <div id="content-page" class="x xdc c12" style="padding-bottom: 4.5rem">
         <div class="x1">
           <div class="x xw">
             ${Fields({

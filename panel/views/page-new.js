@@ -12,6 +12,8 @@ var pageNew = PageNew()
 module.exports = PageNewView 
 
 function PageNewView (state, emit) {
+  if (!state.site.blueprints) return ''
+    
   var blueprint = getBlueprint()
   var views = methodsPage.getViews({
     blueprint: blueprint,

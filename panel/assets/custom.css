@@ -218,7 +218,7 @@ input, textarea {
 [tabindex] { outline: 0 }
 
 textarea {
-  min-height: 10rem;
+  min-height: 6rem;
 }
 
 .psr { position: relative }
@@ -789,13 +789,13 @@ span.CodeMirror-selectedtext {
 }
 .CodeMirror {
   height: auto;
-  min-height: 10rem;
+  min-height: 6rem;
   padding: 1rem;
   font: inherit;
   z-index: 1
 }
 .CodeMirror-scroll {
-  min-height: 10rem;
+  min-height: 6rem;
 }
 .CodeMirror-fullscreen {
     background: #fff;
