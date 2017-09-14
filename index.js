@@ -4,7 +4,7 @@ var config = require('./config')
 
 // setup
 var app = choo()
-var site = enoki()
+var site = enoki.state()
 config(app, site)
 
 // plugins

@@ -182,8 +182,9 @@ function panel (state, emitter) {
     })
   }
 
-  function onPublish () {
+  function onPublish (data) {
     var changes = checkForChanges(state.panel.changes)
+    data = data || { }
 
     // check for and confirm changes
     if (changes && typeof window !== 'undefined') {
@@ -201,13 +202,8 @@ function panel (state, emitter) {
     }, function (err, resp, body) {
       if (err) return alert(err.message)
       state.panel.publish.active = false
-
-      if (data.render) {
-        emitter.emit(state.events.PANEL_LOADING, { loading: false })
-        emitter.emit(state.events.RENDER)
-      } else {
-        onRefresh({ path: data.pathPage })
-      }
+      emitter.emit(state.events.PANEL_LOADING, { loading: false })
+      emitter.emit(state.events.RENDER)
     })  
   }
 

@@ -49,7 +49,7 @@ function PageNewView (state, emit) {
   }
 
   function getBlueprint () {
-    if (!state.page) {
+    if (!state.page || !state.site) {
       return { }
     } else {
       return (
