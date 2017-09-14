@@ -142,7 +142,7 @@ function elsChildren (props) {
       return html`
         <li id="${child.url}" class="m0">
           <a
-            href="${child.url}"
+            href="/panel${child.url}"
             class="db py0-5 truncate"
             ondragstart=${handleDragStart}
           >${child.title || child.dirname}</a>

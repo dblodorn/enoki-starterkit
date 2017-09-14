@@ -9,6 +9,7 @@ app.use(require('./plugins/ui'))
 app.use(require('./plugins/panel'))
 
 // routes
+app.route('/', require('./views/home'))
 app.route('*', require('./views/default'))
 
 // export or mount

@@ -31,7 +31,7 @@ module.exports = View
 
 function View (state, emit) {
   // TODO: currently overwrite page
-  var pathPage = state.href.replace('/admin', '')
+  var pathPage = state.href.replace('/panel', '')
   state.page = utils.page().find(pathPage, state.content)
 
   var search = queryString.parse(location.search)
@@ -50,7 +50,7 @@ function View (state, emit) {
     return html`
       <div id="header" class="x usn z2 psr bgblack">
         <div class="px1 wsnw breadcrumbs">
-          <a href="/" class="db p1 nbb">index</a>
+          <a href="/panel" class="db p1 nbb">index</a>
           ${Breadcrumbs({ page: state.page })}
         </div>
         <div class="p1 tcwhite tdn curp" onclick=${handlePublish}>
