@@ -88,15 +88,15 @@ class PageNew extends Nanocomponent {
     var self = this
     return html`
       <div class="x c12 lh1 usn">
-        <div class="p1">
+        <div class="p1 x1">
           <div
             class="bgblack tcwhite p1 curp fwb br1"
             onclick=${this.handleSave.bind(self)}
-          >Save</div>
+          >Create page</div>
         </div>
         <div class="p1">
           <div
-            class="bgblack tcwhite p1 curp br1"
+            class="bggreydark bgblack-hover tcwhite p1 curp br1"
             onclick=${this.handleCancel.bind(self)}
           >Cancel</div>
         </div>
@@ -135,7 +135,11 @@ class PageNew extends Nanocomponent {
     this.emit('cancel')
   }
 
-  update () {
+  update (props) {
     return false
+  }
+
+  unload (props) {
+    this.customUri = false
   }
 }

@@ -1,8 +1,8 @@
-module.exports = interface
+module.exports = ui
 
 var draggableCount = 0
 
-function interface (state, emitter) {
+function ui (state, emitter) {
   state.ui = {
     dragActive: false
   }

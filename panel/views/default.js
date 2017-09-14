@@ -31,7 +31,8 @@ module.exports = View
 
 function View (state, emit) {
   // TODO: currently overwrite page
-  state.page = utils.page().find(state.href, state.content)
+  var pathPage = state.href.replace('/admin', '')
+  state.page = utils.page().find(pathPage, state.content)
 
   var search = queryString.parse(location.search)
   var draftPage = getDraftPage()
