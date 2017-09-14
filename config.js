@@ -4,12 +4,11 @@ var enoki = require('enoki')
 var path = require('path')
 var fs = require('fs')
 
-var site = enoki()
 var views = getViews()
 
 module.exports = setup
 
-function setup (app) {
+function setup (app, site) {
   app.use(structure)
   return app
 

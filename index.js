@@ -1,18 +1,18 @@
 var choo = require('choo')
-var config = require('./app')
+var enoki = require('enoki')
+var config = require('./config')
 
-// wrap choo in cms
-var app = config(choo())
+// setup
+var app = choo()
+var site = enoki()
+config(app, site)
 
-// create your app
+// plugins
 app.use(require('./site/plugins/scroll'))
 
-// error route
+// routes
 app.route('*', require('./site/views/notfound'))
 
-// public
-if (module.parent) {
-  module.exports = app
-} else {
-  app.mount('main')
-}
+// export or mount
+if (module.parent) module.exports = app
+else app.mount('main')

@@ -119,8 +119,9 @@ function panel (state, emitter) {
     assert.equal(typeof data, 'object', 'enoki: data must be type object')
     assert.equal(typeof data.pathPage, 'string', 'enoki: data.pathPage must be type string')
 
-    if (data.confirm) {
-      if (!window.confirm(`Are you sure you want to delete ${data.title || data.pathPage}?`)) {
+    if (data.confirm !== false) {
+      var name = data.title || data.pathPage
+      if (!window.confirm(`Are you sure you want to delete ${name}?`)) {
         return
       }
     }
