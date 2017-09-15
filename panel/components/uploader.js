@@ -13,6 +13,7 @@ class Uploader extends Nanocomponent {
     this.handleChange = this.handleChange.bind(this)
     this.handleDragEnter = this.handleDragEnter.bind(this)
     this.handleDragLeave = this.handleDragLeave.bind(this)
+    this.handleDrop = this.handleDrop.bind(this)
   }
 
   createElement (props) {
@@ -28,6 +29,7 @@ class Uploader extends Nanocomponent {
             type="file"
             multiple="true"
             class="op0 psa t0 l0 r0 b0 z2 c12 curp"
+            ondrop=${this.handleDrop}
             onchange=${this.handleChange}
             ondragenter=${this.handleDragEnter}
             ondragleave=${this.handleDragLeave}
@@ -58,6 +60,12 @@ class Uploader extends Nanocomponent {
       this.props.handleChange('change', {
         files: files ? files : { }
       })
+    }
+  }
+
+  handleDrop (event) {
+    if (this.props.handleDrop) {
+      this.props.handleDrop(event)
     }
   }
 

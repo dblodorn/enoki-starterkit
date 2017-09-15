@@ -21,14 +21,17 @@ function panel (state, emitter) {
   }
 
   emitter.on(state.events.DOMCONTENTLOADED, onLoad)
+  emitter.on(state.events.PANEL_LOADING, onLoading)
   emitter.on(state.events.PANEL_UPDATE, onUpdate)
+
   emitter.on(state.events.PANEL_SAVE, onSave)
   emitter.on(state.events.PANEL_CANCEL, onCancel)
-  emitter.on(state.events.PANEL_LOADING, onLoading)
-  emitter.on(state.events.PANEL_REMOVE, onRemove)
-  emitter.on(state.events.PANEL_PAGE_ADD, onPageAdd)
-  emitter.on(state.events.PANEL_FILES_ADD, onFilesAdd)
   emitter.on(state.events.PANEL_PUBLISH, onPublish)
+
+  emitter.on(state.events.PANEL_PAGE_ADD, onPageAdd)
+  emitter.on(state.events.PANEL_PAGE_REMOVE, onPageRemove)
+  emitter.on(state.events.PANEL_FILE_ADD, onFileAdd)
+  emitter.on(state.events.PANEL_FILE_REMOVE, onFileRemove)
 
   function onLoad () {
     xhr.get({
@@ -108,7 +111,7 @@ function panel (state, emitter) {
     emitter.emit(state.events.RENDER)
 
     xhr.put({
-      uri: '/api/v1/add',
+      uri: '/api/v1/page/add',
       body: data,
       json: true
     }, function (err, resp, body) {
@@ -124,7 +127,7 @@ function panel (state, emitter) {
     })  
   }
 
-  function onRemove (data) {
+  function onPageRemove (data) {
     assert.equal(typeof data, 'object', 'enoki: data must be type object')
     assert.equal(typeof data.pathPage, 'string', 'enoki: data.pathPage must be type string')
 
@@ -142,24 +145,25 @@ function panel (state, emitter) {
     emitter.emit(state.events.RENDER)
 
     xhr.put({
-      uri: '/api/v1/remove',
+      uri: '/api/v1/page/remove',
       body: data,
       json: true
     }, function (err, resp, body) {
       if (err) return alert(err.message)
+
       if (data.render) {
         emitter.emit(state.events.PANEL_LOADING, { loading: false })
         emitter.emit(state.events.RENDER)
       } else {
         onRefresh({
           path: data.pathPage,
-          redirect:  path.join(data.pathPage, '../')
+          redirect: path.join('/panel', data.pathPage, '../')
         })
       }
     })  
   }
 
-  function onFilesAdd (data) {
+  function onFileAdd (data) {
     assert.equal(typeof data, 'object', 'enoki: data must be type object')
     assert.equal(typeof data.pathPage, 'string', 'enoki: data.pathPage must be type string')
     assert.equal(typeof data.files, 'object', 'enoki: data.files must be type object')
@@ -181,7 +185,7 @@ function panel (state, emitter) {
     })
 
     // send
-    send.open('POST', '/api/v1/add-files', true)
+    send.open('POST', '/api/v1/file/add', true)
     send.setRequestHeader('path-page', data.pathPage)
     send.send(formData)
 
@@ -192,9 +196,45 @@ function panel (state, emitter) {
         emitter.emit(state.events.PANEL_LOADING, { loading: false })
         emitter.emit(state.events.RENDER)
       } else {
-        onRefresh({ path: data.pathPage })
+        onRefresh({ path: path.join('panel', data.pathPage) })
       }
     })
+  }
+
+  function onFileRemove (data) {
+    assert.equal(typeof data, 'object', 'enoki: data must be type object')
+    assert.equal(typeof data.pathFile, 'string', 'enoki: data.pathFile must be type string')
+
+    if (data.confirm !== false) {
+      var name = data.title || data.pathFile
+      if (!window.confirm(`Are you sure you want to delete ${name}?`)) {
+        return
+      }
+    }
+
+    var session = state.panel.session[data.pathFile]
+    // if (session) data.refresh = true
+
+    emitter.emit(state.events.PANEL_LOADING, { loading: true })
+    emitter.emit(state.events.RENDER)
+
+    xhr.put({
+      uri: '/api/v1/file/remove',
+      body: data,
+      json: true
+    }, function (err, resp, body) {
+      if (err) return alert(err.message)
+
+      if (data.render) {
+        emitter.emit(state.events.PANEL_LOADING, { loading: false })
+        emitter.emit(state.events.RENDER)
+      } else {
+        onRefresh({
+          path: data.pathFile,
+          redirect: path.join('/panel', data.pathFile, '../')
+        })
+      }
+    })  
   }
 
   function onPublish (data) {

@@ -1,5 +1,6 @@
 var objectValues = require('object-values')
 var html = require('choo/html')
+var path = require('path')
 
 var Uploader = require('../components/uploader')
 var methodsFile = require('../methods/file')
@@ -18,7 +19,7 @@ function sidebar (props, emit) {
       <div class="psst p1" style="top: 0.75rem; padding-bottom: 5.5rem">
         ${props.pagesActive ? elPages() : ''}
         ${props.filesActive ? elFiles() : ''}
-        ${props.handleRemovePage ? elRemove() : ''}
+        ${props.handlePageRemove ? elRemove() : ''}
       </div>
     </div>
   `
@@ -70,12 +71,12 @@ function sidebar (props, emit) {
             <a
               href="?file=new"
               class="button-inline"
-              onclick=${handleFilesAdd}
+              onclick=${handleFileAdd}
             >Add</a>
             <a href="?files=all" class="button-inline">All</a>
           </div>
         </div>
-        ${props.handleFilesUpload ? elUploadContainer() : ''}
+        ${props.handleFileUpload ? elUploadContainer() : ''}
         <ul class="c12 myc1 lsn">
           ${elsFiles(props.page)}
         </div>
@@ -91,7 +92,8 @@ function sidebar (props, emit) {
       ">
         ${uploader.render({
           text: 'Drag and drop here to add file',
-          handleFiles: props.handleFilesUpload,
+          handleFiles: props.handleFileUpload,
+          handleDrop: props.handleFileDrop,
           handleDragEnter: function (event) {
             var el = event.target.parentNode.parentNode.parentNode
             el.classList.remove('bgwhite', 'tcblack')
@@ -112,13 +114,13 @@ function sidebar (props, emit) {
       <div>
         <span
           class="tcgrey curp tcblack-hover"
-          onclick=${props.handleRemovePage}
+          onclick=${props.handlePageRemove}
         >Delete page</span>
       </div>
     `
   }
 
-  function handleFilesAdd (event) {
+  function handleFileAdd (event) {
     uploader.open()
     event.preventDefault()
   }
@@ -142,7 +144,7 @@ function elsChildren (props) {
       return html`
         <li id="${child.url}" class="m0">
           <a
-            href="/panel${child.url}"
+            href="${path.join('/panel', child.url)}"
             class="db py0-5 truncate"
             ondragstart=${handleDragStart}
           >${child.title || child.dirname}</a>

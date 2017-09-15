@@ -5,16 +5,12 @@ var md = new MarkdownIt()
 module.exports = format
 
 function format (str) {
-  str = str || ''
-  return rawCreateElement(md.render(str))
+  return rawCreateElement(md.render(str || ''))
 }
 
 function rawCreateElement (tag) {
-  if (typeof window !== 'undefined') {
-    return browser()
-  } else {
-    return server()
-  }
+  if (typeof window !== 'undefined') return browser()
+  else return server()
 
   function browser () {
     var el = html`<div></div>`
@@ -23,7 +19,7 @@ function rawCreateElement (tag) {
   }
 
   function server () {
-    var wrapper = String(tag)
+    var wrapper = new String(tag)
     wrapper.__encoded = true
     return wrapper
   }

@@ -19,7 +19,7 @@ function FilesAll (state, emit) {
             <a
               href="?file=new"
               class="button-inline"
-              onclick=${handleFilesAdd}
+              onclick=${handleFileAdd}
             >Add</a>
           </div>
         </div>
@@ -55,13 +55,13 @@ function FilesAll (state, emit) {
     `
   }
 
-  function handleFilesAdd (event) {
+  function handleFileAdd (event) {
     uploader.open()
     event.preventDefault()
   }
 
    function handleFilesUpload (event, data) {
-    emit(state.events.PANEL_FILES_ADD, {
+    emit(state.events.PANEL_FILE_ADD, {
       pathPage: state.page.path,
       files: data.files
     })

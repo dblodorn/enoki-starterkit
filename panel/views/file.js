@@ -126,8 +126,8 @@ function File (state, emit) {
   }
 
   function handleRemove () {
-    emit(state.events.PANEL_REMOVE, {
-      pathPage: file.path
+    emit(state.events.PANEL_FILE_REMOVE, {
+      pathFile: file.path
     })
   } 
 

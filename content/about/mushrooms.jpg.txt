@@ -1,0 +1,1 @@
+text: An example of an image caption.

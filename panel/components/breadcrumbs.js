@@ -1,6 +1,7 @@
 var queryString = require('query-string')
 var objectKeys = require('object-keys')
 var html = require('choo/html')
+var npath = require('path')
 
 module.exports = breadcrumbs
 
@@ -28,7 +29,7 @@ function breadcrumbs (props) {
       var href = result.map(crumb => crumb.path).join('/') + '/' + path + '/'
       result.push({
         path: path,
-        el: html`<a href="/panel${href}" class="db p1 nbb">${path}</a>`
+        el: html`<a href="${npath.join('/panel', href)}" class="db p1 nbb">${path}</a>`
       })
       return result
     }, [{ path: '', el: ''}])

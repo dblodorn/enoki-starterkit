@@ -75,9 +75,11 @@ function View (state, emit) {
       uploadActive: state.ui.dragActive,
       pagesActive: !(blueprint.pages === false),
       filesActive: !(blueprint.files === false),
-      handleFiles: handleFilesUpload,
-      handleRemovePage: handleRemovePage,
-      handleFilesUpload: handleFilesUpload
+      handleFile: handleFileUpload,
+      handleFileUpload: handleFileUpload,
+      handleFileDrop: handleFileDrop,
+      handleFileRemove: handleFileRemove,
+      handlePageRemove: handlePageRemove,
     }, emit)
   }
 
@@ -138,7 +140,7 @@ function View (state, emit) {
                 saveLarge: true,
                 handleSave: handleSavePage,
                 handleCancel: handleCancelPage,
-                handleRemove: handleRemovePage
+                handleRemove: handlePageRemove
               })}
             </div>
           </div>
@@ -176,18 +178,29 @@ function View (state, emit) {
     })
   }
 
-  function handleRemovePage () {
-    emit(state.events.PANEL_REMOVE, {
+  function handlePageRemove () {
+    emit(state.events.PANEL_PAGE_REMOVE, {
       confirm: true,
       title: state.page.title,
       pathPage: state.page.path
     })
   }
 
-  function handleFilesUpload (event, data) {
-    emit(state.events.PANEL_FILES_ADD, {
+  function handleFileUpload (event, data) {
+    emit(state.events.PANEL_FILE_ADD, {
       pathPage: state.page.path,
       files: data.files
+    })
+  }
+
+  function handleFileDrop (event) {
+    emit(state.events.UI_DROP)
+  }
+
+  function handleFileRemove (event, data) {
+    emit(state.events.PANEL_FILE_REMOVE, {
+      confirm: true,
+      pathFile: data.pathFile
     })
   }
 

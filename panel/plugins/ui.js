@@ -8,6 +8,7 @@ function ui (state, emitter) {
   }
 
   emitter.on(state.events.DOMCONTENTLOADED, handleLoad)
+  emitter.on(state.events.UI_DROP, handleDragLeave)
 
   function handleLoad (data) {
     window.addEventListener('dragenter', handleDragEnter, false)
@@ -15,7 +16,7 @@ function ui (state, emitter) {
   }
 
   function handleDragEnter (event) {
-    event.preventDefault()
+    if (event) event.preventDefault()
     draggableCount += 1
     if (!state.ui.dragActive) {
       state.ui.dragActive = true
@@ -24,7 +25,7 @@ function ui (state, emitter) {
   }
 
   function handleDragLeave (event) {
-    event.preventDefault()
+    if (event) event.preventDefault()
     draggableCount -= 1
     if (draggableCount <= 0) {
       state.ui.dragActive = false
