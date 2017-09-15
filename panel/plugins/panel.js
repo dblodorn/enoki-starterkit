@@ -59,7 +59,8 @@ function panel (state, emitter) {
     assert.equal(typeof data.pathPage, 'string', 'enoki: data.pathPage must be type string')
     assert.equal(typeof data.page, 'object', 'enoki: data.page must be type object')
 
-    var session = state.panel.session[data.pathPage]
+    var pathParent = data.pathParent || ''
+    var session = state.panel.session[path.join(data.pathPage, pathParent)]
     // if (!session) data.refresh = true
 
     emitter.emit(state.events.PANEL_LOADING, { loading: true })
@@ -71,7 +72,7 @@ function panel (state, emitter) {
       json: true
     }, function (err, resp, body) {
       if (err) return alert(err.message)
-      delete state.panel.changes[data.pathPage]
+      delete state.panel.changes[path.join(data.pathPage, pathParent)]
       if (data.render) {
         emitter.emit(state.events.PANEL_LOADING, { loading: false })
         emitter.emit(state.events.RENDER)

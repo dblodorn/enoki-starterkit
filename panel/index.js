@@ -4,6 +4,7 @@ var choo = require('choo')
 var app = choo()
 
 // plugins
+app.use(require('./plugins/scroll'))
 app.use(require('./plugins/events'))
 app.use(require('./plugins/ui'))
 app.use(require('./plugins/panel'))
