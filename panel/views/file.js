@@ -33,6 +33,8 @@ function File (state, emit) {
         class="c12 psst t0 p1 file-preview"
       >
         ${file.type === 'image' ? image() : ''}
+        ${file.type === 'audio' ? audio() : ''}
+        ${file.type === 'video' ? video() : ''}
       </div>
     `
   }
@@ -49,14 +51,7 @@ function File (state, emit) {
               ${filename}
             </div>
           </div>
-          <div class="p1 c12">
-            <div class="c12 fwb usn mb1">
-              Dimensions
-            </div>
-            <div class="input input-disabled p0-5">
-              ${file.height}/${file.width}px
-            </div>
-          </div>
+          ${(file.height && file.width) ? dimensions() : ''}
           ${Fields({
             blueprint: blueprint,
             draft: draftFile,
@@ -69,6 +64,19 @@ function File (state, emit) {
               onclick=${handleRemove}
             >Delete file</span>
           </div>
+        </div>
+      </div>
+    `
+  }
+
+  function dimensions () {
+    return html`
+      <div class="p1 c12">
+        <div class="c12 fwb usn mb1">
+          Dimensions
+        </div>
+        <div class="input input-disabled p0-5">
+          ${file.height}/${file.width}px
         </div>
       </div>
     `
@@ -91,6 +99,22 @@ function File (state, emit) {
 
   function image () {
     return html`<img src="${file.path}" class="ofc" />`
+  }
+
+  function audio () {
+    return html`
+      <div class="x xjc xac h100 w100">
+        <audio src="${file.path}" controls>
+      </div>
+    `
+  }
+
+  function video () {
+    return html`
+      <video class="ofc" controls >
+        <source src="${file.path}" type="video/mp4">
+      </video>
+    `
   }
 
   function notFound () {

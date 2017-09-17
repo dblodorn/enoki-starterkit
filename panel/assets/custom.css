@@ -42,6 +42,8 @@ ul li { margin-left: 1.2rem }
 .c8 { width: 66.6% }
 .c12 { width: 100% }
 
+.h100 { height: 100% }
+.w100 { width: 100% }
 .vhmn100 { min-height: 100vh }
 
 .psst { position: sticky; position: -webkit-sticky; }
