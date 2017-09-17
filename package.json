@@ -35,11 +35,5 @@
   "devDependencies": {
     "browserify": "^14.4.0",
     "es2040": "^1.2.6"
-  },
-  "enoki": {
-    "paths": {
-      "content": "content",
-      "public": "build"
-    }
   }
 }
